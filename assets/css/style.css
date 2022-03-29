@@ -4,10 +4,6 @@ body {
   line-height: 1;
 }
 
-header {
-  border-bottom: 10px solid black;
-}
-
 textarea{
   background: transparent;
   border: none;
@@ -69,7 +65,7 @@ textarea{
   color: white;
 }
 
-.saveBtn i:hover {
+.saveBtn :hover {
   font-size: 20px;
   transition: all .3s ease-in-out;
 }

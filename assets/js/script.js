@@ -1,57 +1,34 @@
 var today = moment().format('MMMM Do YYYY');
-var now = moment().format('h:mm:ss a');
-var currentHour = now - moment().format('mm:ss a');
-var textEl = document.getElementById("currentDay");
-textEl.textContent = today;
-var workHours = {};
+var currentHour = moment().format('HH');
+$("#currentDay").text(today);
 
-var loadWorkHours = function(){
-    workHours = JSON.parse(localStorage.getItem("workHours"));
-
-    if(!workHours){
-        workHours = {}
+var createWorkHours= function(){
+    for (var i = 8; i <= 17; i++){
+        var hour = i % 12;
+        if(hour === 0){
+            hour = 12;
+        }
+        var content = loadHourText(i);
+        var temporal = i < currentHour ? "past" : i == currentHour ? "present" : "future";
+        var hourHTML = `<li class="${temporal} timeblock "> 
+                          <h3 class="hour"> ${hour}</h3>
+                          <textarea id="text_${i}">${content}</textarea>
+                          <button class="saveBtn" onclick="saveHourText(${i})">Save</button>`
+        $("#schedule").append(hourHTML);
     }
-}
-
-var createWorkHour= function(workHour, workHourText){
-    var workHourLi = $("<li>").addClass(".hour-block");
-    var button = $("<button>").addClass(".saveBtn");
-    var workHourp = $("<p>").addClass(".textarea").text(workHourText);
-    var workHourh = $("<h3>").addClass(".hour").text(workHour);
-
-    workHourLi.append(workHourh, workHourp, button);
-
-    if(workHour < now){
-        workHourLi.remove("future");
-        workHourLi.addClass(".past");
-    } else if(workHour === currentHour){
-        workHourLi.remove(".past");
-        workHourLi.addClass(".present");
-    } else {
-        workHourLi.remove(".present");
-        workHourLi.addClass(".future");
-    }
-
-    $("hour-block").append(workHourLi);
     
+} 
+
+var loadHourText = function(hour){
+    return localStorage.getItem(hour) || "";
     
 }
 
-//it is possible I may need to put the save button inside textarea to work the way inteneded. 
 
-$(".saveBtn").on("click", "button", function(){
-    saveWorkHours();
-})
 
-$(".textarea").on("click", "p", function(){
-    var text = $(this).text().trim();
+var saveHourText = function(hour) {
+    window.alert("you touched me" + " " + hour + " times");
+    localStorage.setItem(hour, $(`#text_${hour}`).get()[0].value);
+ }
 
-    var textInput = $("<textarea>").addClass(".textarea").val(text);
-    $(this).replaceWith(textInput);
-
-})
-
-var saveWorkHours = function(){
-    localStorage.setItem("workHours", JSON.stringify(workHours));
-
-}
+createWorkHours()
