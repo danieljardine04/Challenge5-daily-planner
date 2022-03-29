@@ -27,7 +27,6 @@ var loadHourText = function(hour){
 
 
 var saveHourText = function(hour) {
-    window.alert("you touched me" + " " + hour + " times");
     localStorage.setItem(hour, $(`#text_${hour}`).get()[0].value);
  }
 
